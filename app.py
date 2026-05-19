@@ -1,10 +1,10 @@
-    import os
-from flask import Flask, render_template_string, request, redirect, url_for, jsonify
+import os
+from flask import Flask, render_template_string, request, redirect, url_for
 import json
 
 app = Flask(__name__)
 
-# مسار ملف حفظ العمليات permanently لتفادي المسح عند إعادة تشغيل السيرفر
+# مسار ملف حفظ البيانات بشكل دائم وثابت داخل سيرفر Render
 DATA_FILE = '/opt/render/project/src/accounting_data.json' if os.path.exists('/opt/render/project/src/') else 'accounting_data.json'
 
 def load_data():
@@ -20,7 +20,7 @@ def save_data(data):
     with open(DATA_FILE, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
-# الواجهة الرسومية المتكاملة المدمجة للنظام المحاسبي (يدعم العملة المحلية R.Y)
+# التصميم الفاخر والكامل للواجهة المحاسبية الموحدة بدعم كامل للعملة المحلية
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -139,7 +139,7 @@ def add_entry():
         data = load_data()
         entry_id = len(data['entries']) + 1
         
-        # إضافة القيد لدفتر اليومية
+        # إنشاء القيد وإضافته للدفتر
         new_entry = {
             "id": entry_id,
             "description": description,
@@ -149,7 +149,7 @@ def add_entry():
         }
         data['entries'].append(new_entry)
         
-        # تحديث أرصدة ميزان المراجعة والحسابات
+        # التأثير التلقائي والمباشر على أرصدة الحسابات
         data['accounts'][debit_acc] += amount
         data['accounts'][credit_acc] -= amount
         
